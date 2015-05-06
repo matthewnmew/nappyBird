@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_nappybird" default="compile.module.nappybird">
+  <dirname property="module.nappybird.basedir" file="${ant.file.module_nappybird}"/>
+  
+  <property name="module.jdk.home.nappybird" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.nappybird" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.nappybird" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.nappybird" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="nappybird.output.dir" value="${module.nappybird.basedir}/out/production/nappyBird"/>
+  <property name="nappybird.testoutput.dir" value="${module.nappybird.basedir}/out/test/nappyBird"/>
+  
+  <path id="nappybird.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="nappybird.module.production.classpath">
+    <path refid="${module.jdk.classpath.nappybird}"/>
+    <pathelement location="/com/company/Tests/junit-4.7.jar"/>
+  </path>
+  
+  <path id="nappybird.runtime.production.module.classpath">
+    <pathelement location="${nappybird.output.dir}"/>
+    <pathelement location="/com/company/Tests/junit-4.7.jar"/>
+  </path>
+  
+  <path id="nappybird.module.classpath">
+    <path refid="${module.jdk.classpath.nappybird}"/>
+    <pathelement location="${nappybird.output.dir}"/>
+    <pathelement location="/com/company/Tests/junit-4.7.jar"/>
+  </path>
+  
+  <path id="nappybird.runtime.module.classpath">
+    <pathelement location="${nappybird.testoutput.dir}"/>
+    <pathelement location="${nappybird.output.dir}"/>
+    <pathelement location="/com/company/Tests/junit-4.7.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.nappybird">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.nappybird">
+    <patternset refid="excluded.from.module.nappybird"/>
+  </patternset>
+  
+  <path id="nappybird.module.sourcepath">
+    <dirset dir="${module.nappybird.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.nappybird" depends="compile.module.nappybird.production,compile.module.nappybird.tests" description="Compile module nappyBird"/>
+  
+  <target name="compile.module.nappybird.production" depends="register.custom.compilers" description="Compile module nappyBird; production classes">
+    <mkdir dir="${nappybird.output.dir}"/>
+    <javac2 destdir="${nappybird.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.nappybird}/javac">
+      <compilerarg line="${compiler.args.nappybird}"/>
+      <bootclasspath refid="nappybird.module.bootclasspath"/>
+      <classpath refid="nappybird.module.production.classpath"/>
+      <src refid="nappybird.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.nappybird"/>
+    </javac2>
+    
+    <copy todir="${nappybird.output.dir}">
+      <fileset dir="${module.nappybird.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.nappybird.tests" depends="register.custom.compilers,compile.module.nappybird.production" description="compile module nappyBird; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.nappybird" description="cleanup module">
+    <delete dir="${nappybird.output.dir}"/>
+    <delete dir="${nappybird.testoutput.dir}"/>
+  </target>
+</project>

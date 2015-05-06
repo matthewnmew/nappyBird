@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="nappyBird:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/nappyBird_jar</output-path>
+    <root id="archive" name="nappyBird.jar">
+      <element id="module-output" name="nappyBird" />
+    </root>
+  </artifact>
+</component>
